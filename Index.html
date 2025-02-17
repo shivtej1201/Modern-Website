@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Website</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+    />
+    <style>
+      :root {
+        --primary-color: #4f46e5;
+        --secondary-color: #7c3aed;
+        --accent-color: #06b6d4;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --background-light: #f9fafb;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      body {
+        background-color: var(--background-light);
+      }
+      canvas {
+        display: block; /* Remove extra space around canvas */
+        /* width: 100vw; Full viewport width
+        height: 100vh; Full viewport height */
+        background-color: #fcf6f6; /* Background color for canvas */
+        position: fixed; /* Fix canvas position */
+        top: 0;
+        left: 0;
+        z-index: -1; /* Place canvas behind other content */
+      }
+
+      .navbar {
+        padding: 1rem 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+      }
+
+      .navbar.scrolled {
+        padding: 0.5rem 2rem;
+        /* background-color: rgba(255, 255, 255, 0.98); */
+      }
+
+      .nav-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        background: linear-gradient(
+          45deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transition: transform 0.3s ease;
+      }
+
+      .logo:hover {
+        transform: scale(1.05);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+      .nav_Color {
+        color: #ffffff !important;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-dark);
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(
+          45deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 1rem;
+        /* background: linear-gradient(-45deg, #4f46e5, #7c3aed, #06b6d4, #0ea5e9); */
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        color: white;
+      }
+
+      .hero-content {
+        max-width: 800px;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .hero p {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      .cta-button {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--primary-color);
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-button::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s ease, height 0.6s ease;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        background: white;
+      }
+
+      .cta-button:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .feature-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      .feature-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .testimonial-card {
+        padding: 2rem;
+        border-radius: 15px;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+
+      .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .contact-form {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(0);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .contact-form:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      footer {
+        background: linear-gradient(to right, #1f2937, #111827);
+        color: white;
+        padding: 4rem 1rem 2rem;
+      }
+
+      .social-links a {
+        color: #ddd;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .social-links a:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+      .section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 80px;
+        gap: 64px;
+      }
+      @media screen and (max-width: 992px) {
+        .section {
+          flex-direction: column;
+          padding: 40px 20px;
+        }
+      }
+      .features-grid {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .feature-card {
+        height: 100%;
+        width: 100%;
+      }
+      #canvas {
+        margin: 0;
+        padding: 0;
+        background-color: #fcf6f6;
+      }
+      .section-title {
+        color: #ffffff;
+      }
+      .canvas-container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+      }
+      .footer {
+        background: linear-gradient(to right, #1f2937, #111827);
+        color: #f9fafb;
+        padding-top: 4rem;
+        position: relative;
+      }
+
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .footer-top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4rem;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+      }
+
+      .footer-logo-section {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .footer-logo {
+        font-size: 2rem;
+        font-weight: bold;
+        background: linear-gradient(
+          45deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 1rem;
+      }
+
+      .footer-tagline {
+        color: #d1d5db;
+        margin-bottom: 2rem;
+        max-width: 300px;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+      }
+
+      .social-links a:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .social-links svg {
+        color: #e5e7eb;
+      }
+
+      .footer-links {
+        display: flex;
+        flex: 2;
+        flex-wrap: wrap;
+        gap: 3rem;
+        justify-content: space-between;
+      }
+
+      .footer-links-column {
+        min-width: 120px;
+      }
+
+      .footer-links-column h3 {
+        color: #f9fafb;
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .footer-links-column h3::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+      }
+
+      .footer-links-column ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-links-column li {
+        margin-bottom: 0.75rem;
+      }
+
+      .footer-links-column a {
+        color: #9ca3af;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links-column a:hover {
+        color: #f9fafb;
+      }
+
+      .footer-newsletter {
+        min-width: 250px;
+        flex: 1;
+      }
+
+      .footer-newsletter h3 {
+        color: #f9fafb;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+
+      .footer-newsletter p {
+        color: #9ca3af;
+        margin-bottom: 1.5rem;
+      }
+
+      .newsletter-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .newsletter-form input {
+        padding: 0.75rem 1rem;
+        border: none;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #f9fafb;
+      }
+
+      .newsletter-form input::placeholder {
+        color: #9ca3af;
+      }
+
+      .newsletter-form input:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.6);
+      }
+
+      .newsletter-form button {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .newsletter-form button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .footer-bottom {
+        padding: 2rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .copyright {
+        color: #9ca3af;
+      }
+
+      .footer-legal {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .footer-legal a {
+        color: #9ca3af;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .footer-legal a:hover {
+        color: #f9fafb;
+      }
+      .MidSection {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        padding: 2rem;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .footer-top {
+          flex-direction: column;
+          gap: 3rem;
+        }
+
+        .footer-links {
+          flex-direction: column;
+          gap: 2rem;
+        }
+
+        .footer-bottom {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .footer-legal {
+          justify-content: center;
+          margin-top: 1rem;
+        }
+      }
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .nav-links {
+          display: none;
+        }
+      }
+
+      /* Animation classes for AOS */
+      [data-aos] {
+        opacity: 0;
+        transition-property: opacity, transform;
+      }
+
+      [data-aos].aos-animate {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Rest of the HTML remains the same, but add data-aos attributes to elements -->
+    <nav class="navbar">
+      <div class="nav-content">
+        <div class="logo">AI</div>
+        <div class="nav-links">
+          <a class="nav_Color" href="#home">Home</a>
+          <a class="nav_Color" href="#features">Features</a>
+          <a class="nav_Color" href="#about">About</a>
+          <a class="nav_Color" href="#testimonials">Testimonials</a>
+          <a class="nav_Color" href="#contact">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Add data-aos attributes to sections -->
+    <section class="hero" id="home">
+      <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+        <h1>Welcome to the Future</h1>
+        <p>
+          Experience innovation at its finest. We're here to transform your
+          digital journey.
+        </p>
+        <button class="cta-button" id="ctaButton">Get Started</button>
+      </div>
+    </section>
+    <div class="canvas-container">
+      <canvas id="canvas"></canvas>
+    </div>
+    <div class="MidSection">
+      <section class="section" id="features">
+        <div class="features-grid">
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <h3>Innovative Design</h3>
+            <p>Experience cutting-edge design that adapts to your needs.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <h3>Smart Solutions</h3>
+            <p>Leverage intelligent features that streamline your workflow.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <h3>24/7 Support</h3>
+            <p>Get round-the-clock assistance from our dedicated team.</p>
+          </div>
+        </div>
+        <div class="section-title" data-aos="fade-up">
+          <h2>Our Features</h2>
+          <p>
+            Discover the tools and services that set us apart from the
+            competition.
+          </p>
+        </div>
+      </section>
+      <section class="section" id="features">
+        <div class="section-title" data-aos="fade-up">
+          <h2>Our Features</h2>
+          <p>
+            Discover the tools and services that set us apart from the
+            competition.
+          </p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <h3>Innovative Design</h3>
+            <p>Experience cutting-edge design that adapts to your needs.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <h3>Smart Solutions</h3>
+            <p>Leverage intelligent features that streamline your workflow.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <h3>24/7 Support</h3>
+            <p>Get round-the-clock assistance from our dedicated team.</p>
+          </div>
+        </div>
+      </section>
+      <section class="section" id="features">
+        <div class="features-grid">
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <h3>Innovative Design</h3>
+            <p>Experience cutting-edge design that adapts to your needs.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <h3>Smart Solutions</h3>
+            <p>Leverage intelligent features that streamline your workflow.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <h3>24/7 Support</h3>
+            <p>Get round-the-clock assistance from our dedicated team.</p>
+          </div>
+        </div>
+        <div class="section-title" data-aos="fade-up">
+          <h2>Our Features</h2>
+          <p>
+            Discover the tools and services that set us apart from the
+            competition.
+          </p>
+        </div>
+      </section>
+      <section class="section" id="features">
+        <div class="section-title" data-aos="fade-up">
+          <h2>Our Features</h2>
+          <p>
+            Discover the tools and services that set us apart from the
+            competition.
+          </p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <h3>Innovative Design</h3>
+            <p>Experience cutting-edge design that adapts to your needs.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <h3>Smart Solutions</h3>
+            <p>Leverage intelligent features that streamline your workflow.</p>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <h3>24/7 Support</h3>
+            <p>Get round-the-clock assistance from our dedicated team.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Add data-aos attributes to all remaining sections -->
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-top">
+          <div class="footer-logo-section">
+            <div class="footer-logo">AI</div>
+            <p class="footer-tagline">Experience innovation at its finest.</p>
+            <div class="social-links">
+              <a href="#" aria-label="Visit our Facebook page">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+                  ></path>
+                </svg>
+              </a>
+              <a href="#" aria-label="Visit our Twitter page">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"
+                  ></path>
+                </svg>
+              </a>
+              <a href="#" aria-label="Visit our Instagram page">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path
+                    d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                  ></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a href="#" aria-label="Visit our LinkedIn page">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                  ></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="footer-links">
+            <div class="footer-links-column">
+              <h3>Services</h3>
+              <ul>
+                <li><a href="#">Web Development</a></li>
+                <li><a href="#">App Design</a></li>
+                <li><a href="#">UI/UX Design</a></li>
+                <li><a href="#">Digital Marketing</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links-column">
+              <h3>Company</h3>
+              <ul>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Team</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Press</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links-column">
+              <h3>Resources</h3>
+              <ul>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Case Studies</a></li>
+                <li><a href="#">Webinars</a></li>
+                <li><a href="#">Documentation</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p class="copyright">© 2025 AI. All rights reserved.</p>
+          <div class="footer-legal">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        easing: "ease-out-cubic",
+        once: true,
+      });
+
+      // Navbar scroll effect
+      window.addEventListener("scroll", () => {
+        const navbar = document.querySelector(".navbar");
+        if (window.scrollY > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      });
+
+      // Enhanced button click effect
+      document.querySelectorAll(".cta-button").forEach((button) => {
+        button.addEventListener("click", function (e) {
+          let rect = this.getBoundingClientRect();
+          let ripple = document.createElement("div");
+          ripple.className = "ripple";
+          ripple.style.left = `${e.clientX - rect.left}px`;
+          ripple.style.top = `${e.clientY - rect.top}px`;
+          this.appendChild(ripple);
+
+          setTimeout(() => {
+            ripple.remove();
+          }, 1000);
+        });
+      });
+
+      // Smooth scroll with offset for fixed header
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          const headerOffset = 80;
+          const elementPosition = target.getBoundingClientRect().top;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        });
+      });
+    </script>
+    <script>
+      // Preload all images to prevent loading lag during scrolling
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const frameCount = 450; // Total number of frames
+      const imagePathPrefix = "./Comp/"; // Path prefix for images
+      const imageExtension = ".jpg"; // Image file extension
+
+      let images = [];
+      let totalHeight;
+      let scrollSpeedMultiplier = 1.1;
+      let currentFrameIndex = 0;
+      let isImagesLoaded = false;
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Function to preload all images
+      function preloadImages() {
+        // Show loading indicator (optional)
+        const loadingIndicator = document.createElement("div");
+        // loadingIndicator.innerText = "Loading animation...";
+        // loadingIndicator.style.position = "fixed";
+        // loadingIndicator.style.top = "50%";
+        // loadingIndicator.style.left = "50%";
+        // loadingIndicator.style.transform = "translate(-50%, -50%)";
+        // loadingIndicator.style.background = "rgba(0,0,0,0.7)";
+        // loadingIndicator.style.color = "white";
+        // loadingIndicator.style.padding = "20px";
+        // loadingIndicator.style.borderRadius = "10px";
+        // loadingIndicator.style.zIndex = "9999";
+        document.body.appendChild(loadingIndicator);
+
+        const promises = [];
+
+        for (let i = 0; i < frameCount; i++) {
+          promises.push(
+            new Promise((resolve) => {
+              const img = new Image();
+              img.src = `${imagePathPrefix}${String(i).padStart(
+                5,
+                "0"
+              )}${imageExtension}`;
+              img.onload = () => {
+                images[i] = img;
+                loadingIndicator.innerText = `Loading animation... ${Math.floor(
+                  (i / frameCount) * 100
+                )}%`;
+                resolve();
+              };
+              img.onerror = () => {
+                console.error(`Failed to load image at index ${i}`);
+                resolve(); // Resolve anyway to continue loading other images
+              };
+            })
+          );
+        }
+
+        Promise.all(promises).then(() => {
+          isImagesLoaded = true;
+          loadingIndicator.remove();
+          updateCanvas(); // Initial render
+        });
+      }
+
+      // Function to update the canvas based on scroll position with better performance
+      function updateCanvas() {
+        if (!isImagesLoaded) return;
+
+        const scrollTop = window.scrollY;
+        const scrollPercent =
+          (scrollTop / (totalHeight - window.innerHeight)) *
+          scrollSpeedMultiplier;
+        const newFrameIndex = Math.min(
+          Math.floor(scrollPercent * (frameCount - 1)),
+          frameCount - 1
+        );
+
+        if (
+          newFrameIndex >= 0 &&
+          newFrameIndex < images.length &&
+          images[newFrameIndex]
+        ) {
+          requestAnimationFrame(() => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(
+              images[newFrameIndex],
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+          });
+          currentFrameIndex = newFrameIndex;
+        }
+      }
+
+      // Handle window resize
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        updateCanvas();
+      });
+
+      // Add scroll event listener with debounce for better performance
+      let scrollTimeout;
+      window.addEventListener("scroll", () => {
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(updateCanvas, 5); // Small delay for performance
+      });
+
+      // Initial setup
+      document.addEventListener("DOMContentLoaded", () => {
+        totalHeight = document.body.scrollHeight;
+        preloadImages();
+      });
+    </script>
+
+    <!-- <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const frameCount = 450;
+      const images = new Array(frameCount); // Pre-initialize array
+      let currentFrameIndex = 0;
+      let isScrolling = false;
+      let rafId;
+
+      // Set canvas size
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      // Preload images with controlled concurrency
+      function preloadImages() {
+        const concurrency = 5; // Number of parallel loads
+        let index = 0;
+
+        function loadNextBatch() {
+          const batch = [];
+          while (index < frameCount && batch.length < concurrency) {
+            batch.push(index++);
+          }
+
+          Promise.all(batch.map(loadImage)).then(() => {
+            if (index < frameCount) loadNextBatch();
+          });
+        }
+
+        loadNextBatch();
+      }
+
+      function loadImage(index) {
+        return new Promise((resolve) => {
+          if (images[index]) return resolve();
+
+          const img = new Image();
+          img.src = `./Comp/${String(index).padStart(5, "0")}.jpg`;
+          img.onload = () => {
+            images[index] = img;
+            resolve();
+          };
+          img.onerror = resolve; // Continue even if some images fail
+        });
+      }
+
+      function updateCanvas() {
+        if (!images[currentFrameIndex]) {
+          requestAnimationFrame(updateCanvas);
+          return;
+        }
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+          images[currentFrameIndex],
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+        isScrolling = false;
+      }
+
+      function handleScroll() {
+        if (isScrolling) return;
+        isScrolling = true;
+
+        const scrollTop = window.scrollY;
+        const maxScroll =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = scrollTop / maxScroll;
+        const targetFrame = Math.min(
+          frameCount - 1,
+          Math.floor(scrollPercent * frameCount)
+        );
+
+        if (targetFrame !== currentFrameIndex) {
+          currentFrameIndex = targetFrame;
+          // Preload adjacent frames
+          for (
+            let i = Math.max(0, targetFrame - 2);
+            i <= Math.min(frameCount - 1, targetFrame + 2);
+            i++
+          ) {
+            loadImage(i);
+          }
+        }
+
+        rafId = requestAnimationFrame(updateCanvas);
+      }
+
+      // Start preloading
+      preloadImages();
+
+      // Use passive scroll listener for better performance
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      window.addEventListener("wheel", handleScroll, { passive: true });
+      window.addEventListener("touchmove", handleScroll, { passive: true });
+
+      // Cleanup
+      window.addEventListener("beforeunload", () => {
+        window.cancelAnimationFrame(rafId);
+      });
+    </script> -->
+    <!-- <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const frameCount = 450; // Total number of frames
+      const imagePathPrefix = "./Comp/"; // Path prefix for images
+      const imageExtension = ".jpg"; // Image file extension
+
+      let images = [];
+      let totalHeight;
+      let scrollSpeedMultiplier = 1; // Slow down the animation (value < 1)
+      let currentFrameIndex = null;
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Function to load a single image
+      function loadImage(index, callback) {
+        const img = new Image();
+        img.src = `${imagePathPrefix}${String(index).padStart(
+          5,
+          "0"
+        )}${imageExtension}`;
+        img.onload = () => callback(img);
+      }
+
+      // Function to update the canvas based on scroll position
+      function updateCanvas() {
+        const scrollTop = window.scrollY;
+        // Adjust the scrollPercent with the scrollSpeedMultiplier
+        const scrollPercent =
+          (scrollTop / (totalHeight - window.innerHeight)) *
+          scrollSpeedMultiplier;
+        const newFrameIndex = Math.floor(scrollPercent * (frameCount - 1));
+
+        if (newFrameIndex !== currentFrameIndex) {
+          currentFrameIndex = newFrameIndex;
+
+          // Load the current frame image
+          if (!images[currentFrameIndex]) {
+            loadImage(currentFrameIndex, (img) => {
+              images[currentFrameIndex] = img;
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(
+                images[currentFrameIndex],
+                0,
+                0,
+                canvas.width,
+                canvas.height
+              );
+            });
+          } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(
+              images[currentFrameIndex],
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+          }
+        }
+      }
+
+      // Add scroll event listener
+      window.addEventListener("scroll", updateCanvas);
+
+      // Initial setup
+      totalHeight = document.body.scrollHeight;
+      updateCanvas();
+    </script> -->
+  </body>
+</html>
